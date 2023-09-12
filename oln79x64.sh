@@ -1,7 +1,5 @@
 #/usr/bin/bash
 
-
-
 # -----------------------------------------------------------
 # Variables
 # -----------------------------------------------------------
@@ -55,7 +53,7 @@ dosync() {
     echo
     for _dir in "$@"; do
       echo ------------ Syncing $_dir to $_host
-      rsync $rsync_opts -e ssh ~/$_dir $_host:$REMOTE_SYNC_DIR/`dirname $_dir`
+      rsync $rsync_opts -e ssh $U01/$_dir $_host:$REMOTE_SYNC_DIR/`dirname $_dir`
     done
 
   fi
@@ -70,7 +68,7 @@ dosyncr() {
     echo
     for _dir in "$@"; do
       echo ------------ Syncing $_dir from $_host
-      rsync $rsync_opts -e ssh $_host:$REMOTE_SYNC_DIR/$_dir ~/`dirname $_dir`
+      rsync $rsync_opts -e ssh $_host:$REMOTE_SYNC_DIR/$_dir $U01/`dirname $_dir`
     done
   fi
 }

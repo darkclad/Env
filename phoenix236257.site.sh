@@ -4,10 +4,7 @@
 # Variables
 # -----------------------------------------------------------
 
-if [ "$U01" == "" ]; then
-	export U01=/scratch/dvladi
-fi
+export U01=/scratch/dvladi
 
-SITE=LC
-BLD_DIR=TUX22164
+. ~/env/sites/LC.sh
 
