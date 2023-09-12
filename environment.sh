@@ -2,9 +2,9 @@
 
 echo -------------- Setting up the environment --------------
 
-if [ -f ~/env/`hostname`.sh ]; then
+if [ -f ~/env/`hostname`.site.sh ]; then
   echo -------------- Setting up the `hostname` environment --------------
-  . ~/env/`hostname`.sh
+  . ~/env/`hostname`.site.sh
 fi
 
 # -----------------------------------------------------------
@@ -51,6 +51,7 @@ alias hostsn='cat $MYHOME/.ssh/config | grep -w Hostname'
 
 alias fedit='nano $MYHOME/env/environment.sh'
 alias fedith='nano $MYHOME/env/$HOSTNAME.sh'
+alias fediths='nano $MYHOME/env/$HOSTNAME.site.sh'
 alias fload='. $MYHOME/env/environment.sh'
 alias floadh='. $MYHOME/env/$HOSTNAME.sh'
 alias sedit='nano $MYHOME/.ssh/config'
@@ -204,3 +205,7 @@ doclean()
   cp $MYHOME/archive/wlfullclient.jar ${BLD_ROOT}/LC/bld/TuxWS/cmdws/MTPConsole/libs/wlfullclient.jar
 }
 
+if [ -f ~/env/`hostname`.sh ]; then
+  echo -------------- Setting up the `hostname` environment --------------
+  . ~/env/`hostname`.sh
+fi
