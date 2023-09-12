@@ -1,0 +1,213 @@
+#/usr/bin/bash
+
+if [ "$U01" == "" ]; then
+  export U01=/u01
+fi
+
+# -----------------------------------------------------------
+# Variables
+# -----------------------------------------------------------
+
+
+SITE=LC
+BLD_ROOT=$U01/TUX122264rp
+CRONDIR=$BLD_ROOT/cron
+TUXDIR=$BLD_ROOT/$SITE/bld
+
+SANITY_DIR="${TUXDIR}/qa/sanity_tests"
+
+JAVA_HOME=/etc/alternatives/jre_1.8.0/
+ORACLE_BASE_DIR=oracle/21/client64
+ORACLE_BASE=/usr/lib/oracle
+ORACLE_HOME=/usr/lib/$ORACLE_BASE_DIR
+ORACLE_INC=/usr/include/$ORACLE_BASE_DIR
+
+TNS_ADMIN=$ORACLE_HOME/network/admin
+RAT_JAVA_HOME="/etc/alternatives/jre_1.8.0/"
+
+PATH=$PATH:.:$HOME/.local/bin:$HOME/bin
+
+export PATH SITE BLD_ROOT CRONDIR TUXDIR JAVA_HOME ORACLE_BASE ORACLE_HOME ORACLE_INC TNS_ADMIN RAT_JAVA_HOME SANITY_DIR
+
+export HISTSIZE=30000
+export HISTFILESIZE=30000
+
+export PS1='\u@\h:$PWD> '
+
+# -----------------------------------------------------------
+# Aliases
+# -----------------------------------------------------------
+
+alias gs='git status'
+alias gco='git checkout'
+alias gb='git branch'
+alias gup='git fetch && git pull'
+alias work='cd $HOME/work'
+alias cdb='cd $BLD_ROOT/cron/build'
+alias cds='cd $BLD_ROOT/LC/bld'
+alias cdt='cd $BLD_ROOT/LC/bld/TuxWS'
+alias cdg='cd $BLD_ROOT/LC/bld/TuxWS/gwws'
+alias cdqa='cd $BLD_ROOT/LC/bld/qa/sanity_tests/apps'
+alias gclean='git reset --hard && git clean -fd'
+alias fedit='nano ~/.environment'
+alias cdh='cd ~'
+alias fload='. ~/.environment'
+alias ports='sudo netstat -tulpn | grep LISTEN'
+alias cdo='cd $ORACLE_HOME'
+alias cdw='cd $HOME/work'
+alias cdd='cd $HOME/Downloads'
+alias cdsa='cd $SANITY_DIR'
+alias cdj='cd ~/Jenkins'
+alias saix='ssh beadev@slc18fic'
+alias daix='ssh slc18fic'
+alias dcrm='ssh crm1'
+alias disp2='xrandr --output Virtual1 --auto --output Virtual2 --auto --scale 2x2 --right-of Virtual1'
+alias disp1='xrandr --output Virtual1 --auto'
+alias dsol='ssh slc11kmn'
+alias sedit='nano ~/.ssh/config'
+alias drem='ssh rem1'
+
+#alias checksec='sudo $HOME/work/checksec.sh/checksec'
+alias bcheck='egrep "Error|ABORT|Abort|coredump|investigated|fatal|Failed\.$" ${BUILD_LOG} | egrep -v "ErrorHandler|ErrorDialog|XMLErrorCodes|TPABORT|(future)|ErrorReporter|ErrorI|ErrorException|EngineSecError|CILErr$'
+
+# -----------------------------------------------------------
+# Functions
+# -----------------------------------------------------------
+
+pause() {
+ read -s -n 1 -p "Press any key to continue . . ."
+ #read TheSomething?'Press any key to continue . . .'
+ echo ""
+}
+
+set_env() {
+    if [ "$1" != "" ]; then
+        export U01="$1"
+    fi
+    . $HOME/.environment
+}
+
+runbuild()
+{
+  export CRONDIR=$BLD_ROOT/cron
+  cd ${BLD_ROOT}/cron/build
+  ./build $*
+}
+
+dobuild()
+{
+  runbuild do_build
+}
+
+doclean()
+{
+  cds
+  git diff --summary | grep --color 'mode change 100644 => 100755' | cut -d' ' -f7- | xargs -d'\n' chmod -x
+  git clean -f
+  git clean -fd
+  git clean -fx
+  git clean -fX
+  git checkout OTMQ/
+  git checkout gp/
+  git checkout TuxJS/
+  git checkout snmp/
+  git checkout tuxedo/
+  git checkout tuxedo_EM/
+  git checkout giconv/
+  git checkout objtm/
+  git checkout orb/
+  git checkout samples/
+  git checkout jca/
+  rm -rf bin/ lib/
+  cp ~/archive/wlfullclient.jar ${BLD_ROOT}/LC/bld/TuxWS/cmdws/MTPConsole/libs/wlfullclient.jar
+}
+
+dobuildd()
+{
+  export DEBUGBUILD=y
+  runbuild do_build
+}
+
+buildcheck()
+{
+  runbuild buildcheck
+}
+
+runsanity()
+{
+  runbuild runsanity $1
+}
+
+dostage()
+{
+  runbuild stagecheck
+}
+
+dotsam()
+{
+  runbuild tsambuild
+}
+
+dosalt() {
+#  export DEBUGBUILD=y
+  runbuild saltbuild
+}
+
+dosaltd() {
+  export DEBUGBUILD=y
+  runbuild saltbuild
+}
+
+findSym()
+{
+  for filename in *.a; do
+    echo $filename
+    objdump -t $filename | grep $1
+  done
+}
+
+
+function sshPwdLess()
+{
+   remote="$1"
+   keygen=${2:-"n"}
+   port=${3:-"22"}
+   file=${4:-"id_rsa.pub"}
+   if [ -z $remote ]; then
+       echo "Use sshPwdLess RemoteHost [Generate key] [Port]"
+       return
+   fi
+
+   if [ "$2" != "n" ]; then
+       ssh-keygen -t rsa
+   fi
+
+   echo "Creating .ssh folder on remote host $remote"
+   ssh $remote -p $port mkdir -p .ssh
+   echo "Copying ~/.ssh/id_rsa.pub to remote host $remote"
+   cat ~/.ssh/id_rsa.pub | ssh $remote -p $port 'cat >> ~/.ssh/authorized_keys'
+   echo "Setting permissions on remote host $remote"
+   ssh $remote -p $port 'chmod 700 ~/.ssh; chmod 640 ~/.ssh/authorized_keys'
+}
+
+function copya()
+{
+  scp $1 slc11kmn:/scratch/dvladi/TUX22164/LC/bld/$1
+}
+
+flog()
+{
+  pushd .
+  cdb
+  nano ../log/build_log
+  popd
+}
+
+slog()
+{
+  pushd .
+  cdb
+  nano ../log/salt_log
+  popd
+}
+
