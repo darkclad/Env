@@ -2,7 +2,10 @@
 
 echo -------------- Setting up the environment --------------
 
-. /home/dvladi/env/$HOSTNAME.site.sh
+if [ -f ~/env/`hostname`.sh ]; then
+  echo -------------- Setting up the `hostname` environment --------------
+  . ~/env/`hostname`.sh
+fi
 
 # -----------------------------------------------------------
 # Variables
@@ -11,6 +14,7 @@ export BLD_ROOT=$U01/$BLD_DIR
 export CRONDIR=$BLD_ROOT/cron
 export TUXDIR=$BLD_ROOT/$SITE/bld
 
+export MYHOME=${MYHOME:-$HOME}
 export PATH=$PATH:.:$HOME/.local/bin:$HOME/bin
 
 export HISTSIZE=30000
@@ -30,25 +34,26 @@ alias gclean='git reset --hard && git clean -fd'
 alias gcp='git cherry-pick'
 alias ga='git add -A'
 
-alias work='cd $HOME/work'
+alias work='cd $MYHOME/work'
 
-alias cdh='cd ~'
+alias cdh='cd $MYHOME'
 alias cdb='cd $BLD_ROOT/cron/build'
 alias cdl='cd $BLD_ROOT/cron/log'
 alias cds='cd $BLD_ROOT/LC/bld'
 alias cdt='cd $BLD_ROOT/LC/bld/TuxWS'
 alias cdg='cd $BLD_ROOT/LC/bld/TuxWS/gwws'
-alias cdu='cd ~/SNA122264/tma_sna'
+alias cdu='cd $U01/'
+alias cde='cd $MYHOME/env'
 alias cdqa='cd $BLD_ROOT/LC/bld/qa/sanity_tests/apps'
 
-alias hosts='cat ~/.ssh/config | grep -w Host'
-alias hostsn='cat ~/.ssh/config | grep -w Hostname'
+alias hosts='cat $MYHOME/.ssh/config | grep -w Host'
+alias hostsn='cat $MYHOME/.ssh/config | grep -w Hostname'
 
-alias fedit='nano ~/env/environment.sh'
-alias fedith='nano ~/env/$HOSTNAME.sh'
-alias fload='. ~/env/environment.sh'
-alias floadh='. ~/env/$HOSTNAME.sh'
-alias sedit='nano ~/.ssh/config'
+alias fedit='nano $MYHOME/env/environment.sh'
+alias fedith='nano $MYHOME/env/$HOSTNAME.sh'
+alias fload='. $MYHOME/env/environment.sh'
+alias floadh='. $MYHOME/env/$HOSTNAME.sh'
+alias sedit='nano $MYHOME/.ssh/config'
 
 alias ports='sudo netstat -tulpn | grep LISTEN'
 
@@ -56,10 +61,10 @@ alias cdo='cd $ORACLE_HOME'
 alias cdw='cd $HOME/work'
 alias cdd='cd $HOME/Downloads'
 alias cdsa='cd $SANITY_DIR'
-alias cdj='cd ~/Jenkins'
+alias cdj='cd $MYHOME/Jenkins'
 
 alias dsol='ssh slc11kmn'
-alias sedit='nano ~/.ssh/config'
+alias sedit='nano $MYHOME/.ssh/config'
 alias drem1='ssh rem1'
 alias drem2='ssh rem2'
 alias drem3='ssh rem3'
@@ -102,10 +107,10 @@ function sshPwdLess()
 
 	echo "Creating .ssh folder on remote host $remote"
 	ssh $remote -p $port mkdir -p .ssh
-	echo "Copying ~/.ssh/id_rsa.pub to remote host $remote"
-	cat ~/.ssh/id_rsa.pub | ssh $remote -p $port 'cat >> ~/.ssh/authorized_keys'
+	echo "Copying $MYHOME/.ssh/id_rsa.pub to remote host $remote"
+	cat $MYHOME/.ssh/id_rsa.pub | ssh $remote -p $port 'cat >> $MYHOME/.ssh/authorized_keys'
 	echo "Setting permissions on remote host $remote"
-	ssh $remote -p $port 'chmod 700 ~/.ssh; chmod 640 ~/.ssh/authorized_keys'
+	ssh $remote -p $port 'chmod 700 $MYHOME/.ssh; chmod 640 $MYHOME/.ssh/authorized_keys'
 }
 
 elog()
@@ -196,10 +201,6 @@ doclean()
   git checkout samples/
   git checkout jca/
   rm -rf bin/ lib/
-  cp ~/archive/wlfullclient.jar ${BLD_ROOT}/LC/bld/TuxWS/cmdws/MTPConsole/libs/wlfullclient.jar
+  cp $MYHOME/archive/wlfullclient.jar ${BLD_ROOT}/LC/bld/TuxWS/cmdws/MTPConsole/libs/wlfullclient.jar
 }
 
-if [ -f ~/env/`hostname`.sh ]; then
-  echo -------------- Setting up the `hostname` environment --------------
-  . ~/env/`hostname`.sh
-fi
