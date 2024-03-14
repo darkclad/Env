@@ -6,5 +6,5 @@
 
 export U01=/scratch/dvladi
 
-. sites/LC.sh
+. ~/env/sites/LC.sh
 

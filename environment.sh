@@ -3,10 +3,9 @@
 echo -------------- Setting up the environment --------------
 
 if [ -f ~/env/`hostname`.site.sh ]; then
-  echo -------------- Setting up the `hostname` environment --------------
   . ~/env/`hostname`.site.sh
 fi
-
+echo -------------- $U01
 # -----------------------------------------------------------
 # Variables
 # -----------------------------------------------------------
@@ -40,11 +39,12 @@ alias cdh='cd $MYHOME'
 alias cdb='cd $BLD_ROOT/cron/build'
 alias cdl='cd $BLD_ROOT/cron/log'
 alias cds='cd $BLD_ROOT/LC/bld'
-alias cdt='cd $BLD_ROOT/LC/bld/TuxWS'
+alias cdt='cd $MYHOME/tmp'
 alias cdg='cd $BLD_ROOT/LC/bld/TuxWS/gwws'
 alias cdu='cd $U01/'
 alias cde='cd $MYHOME/env'
 alias cdqa='cd $BLD_ROOT/LC/bld/qa/sanity_tests/apps'
+alias cda='cd $MYHOME/work/art_ims/cron'
 
 alias hosts='cat $MYHOME/.ssh/config | grep -w Host'
 alias hostsn='cat $MYHOME/.ssh/config | grep -w Hostname'
