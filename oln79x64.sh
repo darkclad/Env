@@ -25,8 +25,13 @@ RAT_JAVA_HOME="/etc/alternatives/jre_1.8.0/"
 
 REMOTE_SYNC_DIR=/scratch/dvladi
 
-PATH=$ORACLE_HOME/bin:$ORACLE_BASE_DIR/client_1/bin:$PATH
-export LD_LIBRARY_PATH=$ORACLE_BASE_DIR/client_1/lib:$LD_LIBRARY_PATH
+if [ -z $_env_is_set_site ]; then
+	export PATH=$ORACLE_HOME/bin:$ORACLE_BASE_DIR/client_1/bin:$PATH
+	export LD_LIBRARY_PATH=$ORACLE_BASE_DIR/client_1/lib:$LD_LIBRARY_PATH
+	export _env_is_set_site=1
+fi
+
+export DBPASSWORD=Gecnjnf0
 
 # -----------------------------------------------------------
 # Aliases
@@ -51,6 +56,8 @@ alias dus='du -h --max-depth=1 . 2>/dev/null | sort -h'
 # -----------------------------------------------------------
 
 . ~/env/stack.sh
+
+stack_clear_all
 
 findSym()
 {
@@ -142,4 +149,15 @@ cobolNO() {
 
   export PATH=$cobol_path
   export LD_LIBRARY_PATH=$cobol_ld
+}
+
+tuxEnv() {
+  tux_path=$(stack_pop tux_path PATH)
+  tux_ld=$(stack_pop tux_ld LD_LIBRARY_PATH)
+  
+  stack_push tux_path "$tux_path"
+  stack_push tux_ld "$tux_ld"
+
+  export PATH=$TUXDIR/bin:$PATH
+  export LD_LIBRARY_PATH=$TUXDIR/lib:$LD_LIBRARY_PATH
 }

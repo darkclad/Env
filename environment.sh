@@ -1,4 +1,4 @@
-#/usr/bin/bash
+#!/usr/bin/bash
 
 echo -------------- Setting up the environment --------------
 
@@ -6,6 +6,8 @@ if [ -f ~/env/`hostname`.site.sh ]; then
   . ~/env/`hostname`.site.sh
 fi
 echo -------------- $U01
+
+
 # -----------------------------------------------------------
 # Variables
 # -----------------------------------------------------------
@@ -14,7 +16,11 @@ export CRONDIR=$BLD_ROOT/cron
 export TUXDIR=$BLD_ROOT/$SITE/bld
 
 export MYHOME=${MYHOME:-$HOME}
-export PATH=$PATH:.:$HOME/.local/bin:$HOME/bin
+
+if [ -z $_env_is_set ]; then
+	export PATH=$PATH:.:$HOME/.local/bin:$HOME/bin
+	export _env_is_set=1
+fi
 
 export HISTSIZE=30000
 export HISTFILESIZE=30000
@@ -55,6 +61,8 @@ alias fediths='nano $MYHOME/env/$HOSTNAME.site.sh'
 alias fload='. $MYHOME/env/environment.sh'
 alias floadh='. $MYHOME/env/$HOSTNAME.sh'
 alias sedit='nano $MYHOME/.ssh/config'
+alias pedit='nano $MYHOME/.bash_profile'
+alias redit='nano $MYHOME/.bashrc'
 
 alias ports='sudo netstat -tulpn | grep LISTEN'
 

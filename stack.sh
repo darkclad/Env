@@ -40,3 +40,10 @@ stack_size() {
   echo `ls -1 $_stack_root/$_var/ 2>/dev/null | wc -l`
 }
 
+stack_list() {
+  ll $_stack_roor
+}
+
+stack_clear_all() {
+  rm -rf $_stack_root
+}
