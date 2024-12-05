@@ -15,8 +15,13 @@ export BLD_ROOT=$U01/$BLD_DIR
 export CRONDIR=$BLD_ROOT/cron
 
 if [ -z $TUXDIR ]; then
-export TUXDIR=$BLD_ROOT/$SITE/bld
-echo "Set TUXDIR to $TUXDIR"
+	export TUXDIR=$BLD_ROOT/$SITE/bld
+	echo "Set TUXDIR to $TUXDIR"
+fi
+
+if [ -z $JAVA_HOME ]; then
+	export JAVA_HOME=/etc/alternatives/jre_11_openjdk/
+	echo "Set JAVA_HOME to $JAVA_HOME"
 fi
 
 export THIRD_PARTY_LIB_DIR=$BLD_ROOT/libs
@@ -122,7 +127,6 @@ dosalt() {
 	runbuild saltbuild $*
 }
 
-domake()
 {
 	export LIBPATH=$ORACLE_HOME:$LIBPATH
 	cd $1
@@ -135,7 +139,8 @@ doclean()
 	cds
 	git clean -f -d
 	git checkout .
-	cp $MYHOME/archive/wlfullclient.jar ${BLD_ROOT}/LC/bld/TuxWS/cmdws/MTPConsole/libs/wlfullclient.jar
+	cp $MYHOME/archive/wlfullclient.jar ${TUXDIR}/TuxWS/cmdws/MTPConsole/libs/wlfullclient.jar
+	7z x $MYHOME/archive/node_modules.zip -o${TUXDIR}/TuxWS/umisc/console
 }
 
 
