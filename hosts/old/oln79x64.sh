@@ -7,20 +7,28 @@
 SANITY_DIR="${TUXDIR}/qa/sanity_tests"
 
 #JAVA_HOME=/etc/alternatives/jre_1.8.0/
-JAVA_HOME=/etc/alternatives/jre_1.8.0_openjdk/
+#JAVA_HOME=/etc/alternatives/jre_1.8.0_openjdk/
+JAVA_HOME=/etc/alternatives/jre_11_openjdk/
 
 export ORACLE_BASE_DIR=/u01/app/dvladi/product/19.0.0
 export ORACLE_HOME=$ORACLE_BASE_DIR/db
 export ORACLE_BASE=/u01/app/dvladi
 export ORACLE_INC=$ORACLE_HOME/sdk/include
-export ORACLE_SID=orcl
+
+#export ORACLE_SID=orcl
+export ORACLE_SID=tuxartdb1
+export DBUSER=artims1
+export DBPASSWORD=ims1!2024ART
+
 
 export TUXDIR_22=$TUXDIR
+#export TUXDIR_22=/u01/app/dvladi/OraHome_1/tuxedo22.1.0.0.0
 export TUXDIR_12=/u01/app/dvladi/OraHome_1/tuxedo12.2.2.0.0
 
 export LIBS_DIR=$BLD_ROOT/libs
 
-TNS_ADMIN=$ORACLE_HOME/network/admin
+#TNS_ADMIN=$ORACLE_HOME/network/admin
+TNS_ADMIN=$U01/tnsadmin_tuxartdb1
 RAT_JAVA_HOME="/etc/alternatives/jre_1.8.0/"
 
 REMOTE_SYNC_DIR=/scratch/dvladi
@@ -31,7 +39,6 @@ if [ -z $_env_is_set_site ]; then
 	export _env_is_set_site=1
 fi
 
-export DBPASSWORD=Gecnjnf0
 
 # -----------------------------------------------------------
 # Aliases
@@ -128,7 +135,7 @@ cobolIT() {
   stack_push cobol_ld "$cobol_ld"
 
   export COBOLIT_LICENSE=/opt/microfocus/citlicense.xml
-  export COBDIR=/opt/microfocus/cobol-it-64
+  export COBDIR=/opt/cobol-it-64
   export COBOLITDIR=$COBDIR
 
   export PATH=$COBDIR/bin:$cobol_path
@@ -160,4 +167,20 @@ tuxEnv() {
 
   export PATH=$TUXDIR/bin:$PATH
   export LD_LIBRARY_PATH=$TUXDIR/lib:$LD_LIBRARY_PATH
+}
+
+checkDebug() {
+  for filename in `ls $1`; do
+    [ -e "$filename" ] || continue
+    echo "File: $filename"
+    readelf -S $filename | grep debug
+  done
+}
+
+cics_sync() {
+  rsync $rsync_opts -e ssh art_cics vm9:/home/vagrant/ForDemian/
+}
+
+cics_sync_r() {
+  rsync $rsync_opts -e ssh vm9:/home/vagrant/ForDemian/art_cics .
 }

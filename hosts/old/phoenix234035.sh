@@ -1,16 +1,10 @@
 #!/bin/bash
 
-echo --- Set site LC ---
 
 # -----------------------------------------------------------
-# Variables
+# Functions
 # -----------------------------------------------------------
 
-if [ "$U01" == "" ]; then
-	export U01=~
-fi
-
-SITE=LC
-BLD_DIR=TUX22164
-
-export SITE=LC
+. ~/env/CRM/crm.sh
+export IS_DBG=1
+export COBOLIT_LICENSE=/opt/microfocus/cobol-it-64/citlicense.xml

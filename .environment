@@ -10,9 +10,10 @@ fi
 
 
 SITE=LC
-BLD_ROOT=$U01/TUX122264rp
+BLD_ROOT=$U01/TUX22264
 CRONDIR=$BLD_ROOT/cron
 TUXDIR=$BLD_ROOT/$SITE/bld
+echo =====$TUXDIR=====
 
 SANITY_DIR="${TUXDIR}/qa/sanity_tests"
 

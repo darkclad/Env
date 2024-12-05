@@ -4,7 +4,8 @@
 # Variables
 # -----------------------------------------------------------
 
-U01=~/work
+U01=/home/vagrant
 . ~/env/sites/LC.sh
 
-
+#SHARED_DRIVE=/home/dvladi
+#D_NAME_GROUP=oracle
