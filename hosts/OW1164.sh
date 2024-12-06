@@ -49,5 +49,24 @@ alias cdd='cd $U01/../Downloads'
 # Functions
 # -----------------------------------------------------------
 
+syncEnv() {
+	cd $U01/../tmp
+	rm -rf env
+	cp -r ../env .
+	rm -rf env/.git
+	rm -rf env/.idea
+	scp env $1
+	cd -
+}
+
+syncEnvR() {
+	cd $U01/../tmp
+	rm -rf env
+	scp -r $1/env .
+	rm -rf env/.git >/dev/null 2>&1
+	rm -rf env/.idea >/dev/null 2>&1
+	cp -r env ../
+	cd -
+}
 
 
