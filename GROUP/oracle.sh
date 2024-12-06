@@ -3,7 +3,7 @@
 _mydir=$(realpath $(dirname ${BASH_SOURCE[0]}))
 . $_mydir/sites/LC.sh
 
-echo -------------- Setting up the ORACLE environment --------------
+printHdrArrow "Setting up the ORACLE environment"
 
 # -----------------------------------------------------------
 # Variables
@@ -16,17 +16,17 @@ export CRONDIR=$BLD_ROOT/cron
 
 if [ -z $TUXDIR ]; then
 	export TUXDIR=$BLD_ROOT/$SITE/bld
-	echo "Set TUXDIR to $TUXDIR"
+	print "\tSet TUXDIR to $TUXDIR"
 fi
 
 if [ -z $JAVA_HOME ]; then
 	export JAVA_HOME=/etc/alternatives/jre_11_openjdk/
-	echo "Set JAVA_HOME to $JAVA_HOME"
+	print "\tSet JAVA_HOME to $JAVA_HOME"
 fi
 
 export THIRD_PARTY_LIB_DIR=$BLD_ROOT/libs
 
-SANITY_DIR="${TUXDIR}/qa/sanity_tests"
+export SANITY_DIR="${TUXDIR}/qa/sanity_tests"
 export LIBS_DIR=$BLD_ROOT/libs
 
 # -----------------------------------------------------------
@@ -127,6 +127,7 @@ dosalt() {
 	runbuild saltbuild $*
 }
 
+domake()
 {
 	export LIBPATH=$ORACLE_HOME:$LIBPATH
 	cd $1
@@ -224,3 +225,4 @@ cobolMFRestartLicense() {
 	sudo /var/microfocuslicensing/bin/restartboth.sh
 	cd -
 }
+

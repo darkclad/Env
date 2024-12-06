@@ -1,26 +1,20 @@
 #!/usr/bin/bash
 
-_load_env() {
-	if [ -f $1 ]; then
-		echo "-------------- Setting $2 environment --------------"
-		. $1
-	else
-		echo "$1 does not exits. Creating"
-		touch $1
-	fi
-}
-
-echo "-------------- Setting up the environment --------------"
 
 _mydir=$(realpath $(dirname ${BASH_SOURCE[0]}))
+_util_file=$_mydir/util.sh
 _os_file=$_mydir/OS/$OSTYPE.sh
 _host_site_file=$_mydir/hosts/`hostname`.site.sh
 _host_file=$_mydir/hosts/`hostname`.sh
 _env_file=$_mydir/environment.sh
 
 # Site environment file MUST set site global variables: U01
-_load_env $_host_site_file "Site"
 
+. $_util_file
+
+printHdrArrow "Setting up the environment"
+
+_load_env $_host_site_file "Site"
 
 _env_d_group_file=$_mydir/GROUP/$D_NAME_GROUP.sh
 
@@ -29,6 +23,7 @@ _env_d_group_file=$_mydir/GROUP/$D_NAME_GROUP.sh
 # -----------------------------------------------------------
 
 export MYHOME=${MYHOME:-$HOME}
+export MYROOT=/mnt/c
 
 if [ -z $_env_is_set ]; then
 	export PATH=$PATH:.:$HOME/.local/bin:$HOME/bin
@@ -98,8 +93,8 @@ checkSym()
 {
 	_out=`objdump -t $2 2>/dev/null | grep $1 | grep -v UND`
 	if [ $? == 0 ]; then
-		echo $filename
-		echo $_out
+		print $filename
+		print $_out
 	fi
 }
 
@@ -116,14 +111,14 @@ findSym()
 
 dosync() {
 	if [ $# -lt 2 ]; then
-		echo "Usage: dosync local_dir host:remote_dir"
+		print "Usage: dosync local_dir host:remote_dir"
 	else
 		_host=$1
 		shift
-		echo
+		print
 		for _dir in "$@"; do
-			echo ------------ Syncing $_dir to $_host
-			echo "Running: rsync $rsync_opts -e ssh $_dir $_host:/`basename $_dir`"
+			printHdr "Syncing $_dir to $_host"
+			print "Running: rsync $rsync_opts -e ssh $_dir $_host:/`basename $_dir`"
 			rsync $rsync_opts -e ssh $_dir $_host:/`basename $_dir`
 		done
 
@@ -132,14 +127,14 @@ dosync() {
 
 dosyncr() {
 	if [ $# -lt 2 ]; then
-		echo "Usage: dosync {file|directory} host "
+		print "Usage: dosync {file|directory} host "
 	else
 		_host=$1
 		shift
-		echo
+		print
 		for _dir in "$@"; do
-			echo ------------ Syncing $_dir from $_host
-			echo "Running: rsync $rsync_opts -e ssh $_host:$REMOTE_SYNC_DIR/$_dir $U01/`dirname $_dir`"
+			printHdr "Syncing $_dir from $_host"
+			print "Running: rsync $rsync_opts -e ssh $_host:$REMOTE_SYNC_DIR/$_dir $U01/`dirname $_dir`"
 			rsync $rsync_opts -e ssh $_host:$REMOTE_SYNC_DIR/$_dir $U01/`dirname $_dir`
 		done
 	fi
@@ -147,8 +142,7 @@ dosyncr() {
 
 pause() {
 	read -s -n 1 -p "Press any key to continue . . ."
-	#read TheSomething?'Press any key to continue . . .'
-	echo ""
+	print ""
 }
 
 set_env() {
@@ -165,7 +159,7 @@ function sshPwdLess()
 	port=${3:-"22"}
 	file=${4:-"id_rsa.pub"}
 	if [ -z $remote ]; then
-		echo "Use sshPwdLess RemoteHost [Generate key] [Port]"
+		print "Use sshPwdLess RemoteHost [Generate key] [Port]"
 		return
 	fi
 
@@ -173,25 +167,25 @@ function sshPwdLess()
 		ssh-keygen -t rsa
 	fi
 
-	echo "Creating .ssh folder on remote host $remote"
+	print "Creating .ssh folder on remote host $remote"
 	ssh $remote -p $port mkdir -p .ssh
-	echo "Copying $MYHOME/.ssh/id_rsa.pub to remote host $remote"
+	print "Copying $MYHOME/.ssh/id_rsa.pub to remote host $remote"
 	cat $MYHOME/.ssh/id_rsa.pub | ssh $remote -p $port 'cat >> $MYHOME/.ssh/authorized_keys'
-	echo "Setting permissions on remote host $remote"
+	print "Setting permissions on remote host $remote"
 	ssh $remote -p $port 'chmod 700 $MYHOME/.ssh; chmod 640 $MYHOME/.ssh/authorized_keys'
 }
 
 checkDebug() {
 	for filename in `ls $1`; do
 		[ -e "$filename" ] || continue
-		echo "File: $filename"
+		print "File: $filename"
 		readelf -S $filename | grep debug
 	done
 }
 
 
 if [ -f $_mydir/stack.sh ]; then
-	echo "-------------- Stack functions are enabled --------------"
+	printHdrArrow "Stack functions are enabled"
 	. $_mydir/stack.sh
 	stack_clear_all
 	fi

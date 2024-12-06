@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "-------------- Set site LC --------------"
+printHdrArrow "Set site LC"
 
 # -----------------------------------------------------------
 # Variables

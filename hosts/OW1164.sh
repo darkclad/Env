@@ -50,23 +50,31 @@ alias cdd='cd $U01/../Downloads'
 # -----------------------------------------------------------
 
 syncEnv() {
-	cd $U01/../tmp
-	rm -rf env
-	cp -r ../env .
-	rm -rf env/.git
-	rm -rf env/.idea
-	scp env $1
-	cd -
+	printHdr "Synchronize environment to $1"
+	changeDir $U01/../tmp
+	print "Remove old env from `pwd`"
+	removeDir env
+	print "Copy $(realpath $(pwd)/../env) to `pwd`"
+	doCopy ../env .
+	print "Removing junk folders"
+	removeDir env/.git env/.idea
+	print "Copy `pwd`/env to $1"
+	scp -r env $1 >/dev/null
+	cd - >/dev/null 2>&1
 }
 
 syncEnvR() {
-	cd $U01/../tmp
-	rm -rf env
-	scp -r $1/env .
-	rm -rf env/.git >/dev/null 2>&1
-	rm -rf env/.idea >/dev/null 2>&1
-	cp -r env ../
-	cd -
+	printHdr "Synchronize environment from $1"
+	changeDir $U01/../tmp
+	print "Remove old env from `pwd`"
+	removeDir env
+	print "Copy $1/env to `pwd`"
+	scp -r $1/env . >/dev/null
+	print "Removing junk folders"
+	removeDir env/.git env/.idea
+	print "Copy `pwd`/env to $(realpath $(pwd)/..)"
+	doCopy env ../
+	cd - >/dev/null 2>&1
 }
 
 
