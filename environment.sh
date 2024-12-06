@@ -194,7 +194,7 @@ if [ -f $_mydir/stack.sh ]; then
 	echo "-------------- Stack functions are enabled --------------"
 	. $_mydir/stack.sh
 	stack_clear_all
-fi
+	fi
 
 _load_env $_os_file "$OS"
 _load_env $_env_d_group_file "$D_NAME_GROUP"

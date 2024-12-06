@@ -1,14 +1,8 @@
 #!/bin/bash
 
-echo "-------------- Set site LC --------------"
 
 # -----------------------------------------------------------
-# Variables
+# Functions
 # -----------------------------------------------------------
 
-if [ -z $U01 ]; then
-	export U01=~
-fi
-
-export SITE=LC
-export BLD_DIR=TUX22164
+. ~/env/CRM/crm.sh

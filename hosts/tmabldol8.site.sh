@@ -4,9 +4,9 @@
 # Variables
 # -----------------------------------------------------------
 
-export D_NAME_GROUP=oracle
-export MYHOME=/home/dvladi
-export U01=/scratch/dvladi
+echo ---- Setting `hostname` variables
 
-#SHARED_DRIVE=/home/dvladi
-#D_NAME_GROUP=oracle
+export U01=/workspace/dvladi
+export MYHOME=$U01
+. $U01/env/sites/LC.sh
+
