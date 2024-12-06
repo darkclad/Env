@@ -4,9 +4,6 @@
 # Variables
 # -----------------------------------------------------------
 
-echo ---- Setting `hostname` variables
-
+export D_NAME_GROUP=oracle
 export U01=/workspace/dvladi
 export MYHOME=$U01
-. $U01/env/sites/LC.sh
-

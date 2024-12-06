@@ -174,25 +174,6 @@ cobolNO() {
   export LD_LIBRARY_PATH=$cobol_ld
 }
 
-tuxEnv() {
-  tux_path=$(stack_pop tux_path PATH)
-  tux_ld=$(stack_pop tux_ld LD_LIBRARY_PATH)
-  
-  stack_push tux_path "$tux_path"
-  stack_push tux_ld "$tux_ld"
-
-  export PATH=$TUXDIR/bin:$PATH
-  export LD_LIBRARY_PATH=$TUXDIR/lib:$LD_LIBRARY_PATH
-}
-
-checkDebug() {
-  for filename in `ls $1`; do
-    [ -e "$filename" ] || continue
-    echo "File: $filename"
-    readelf -S $filename | grep debug
-  done
-}
-
 cics_sync() {
   rsync $rsync_opts -e ssh art_cics vm9:/home/vagrant/ForDemian/
 }

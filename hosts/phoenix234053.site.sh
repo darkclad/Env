@@ -4,7 +4,7 @@
 # Variables
 # -----------------------------------------------------------
 
+export D_NAME_GROUP=oracle
 export U01=/scratch/dvladi
-
-. ~/env/sites/LC.sh
+export MYHOME=$U01
 
