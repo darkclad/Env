@@ -183,6 +183,28 @@ checkDebug() {
 	done
 }
 
+tarit() {
+	if [ $# -eq 2 ]; then
+		tar -zcvf $1.$2.tar.gz $1
+	elif [ $# -eq 1 ]; then
+		tar -zcvf $1.tar.gz $1
+	else
+		echo "Usage: tarit folder {suffix}"
+	fi
+}
+
+start_ssh_agent() {
+	if [ ! -z "$PS1" ]; then
+		if [ "$SSH_AGENT_PID" == "" ]; then
+			eval `ssh-agent`
+		fi
+		ssh-add
+	fi
+}
+
+# -----------------------------------------------------------
+# Set up
+# -----------------------------------------------------------
 
 if [ -f $_mydir/stack.sh ]; then
 	printHdrArrow "Stack functions are enabled"
