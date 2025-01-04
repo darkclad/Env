@@ -40,7 +40,8 @@ alias disp1='xrandr --output Virtual1 --auto'
 alias dsol='ssh slc11kmn'
 alias sedit='nano ~/.ssh/config'
 alias drem='ssh rem1'
-alias gowork='ssh -XC wrk1'
+alias gowork='ssh -XC phoenix233273'
+alias gotest='ssh -XC phoenix234583'
 
 unalias cdd
 alias cdd='cd $U01/../Downloads'
